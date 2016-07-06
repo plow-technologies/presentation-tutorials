@@ -29,9 +29,12 @@ import           Data.Typeable
 import           Database.Persist.Sql
 
 import           Haxl.Core hiding (try)
-
+import qualified Haxl.Core.Monad as Haxl
+import qualified Haxl.Core.DataCache as Haxl
+import           Haxl.Core.RequestStore 
+import qualified Data.IORef as IORef
 import           Models
-
+import Debug.Trace (traceShow)
 import           System.Random
 
 
@@ -51,8 +54,18 @@ getUsernameById :: UserId -> GenHaxl () (Maybe User)
 getUsernameById userId = dataFetch (GetUserById userId)
 
 insertUsers :: [User] -> GenHaxl () ()
-insertUsers users = dataFetch (InsertUsers users)
+insertUsers users = do
+  str <- Haxl.dumpCacheAsHaskell
+  traceShow ("cache result is: " ++ str) (return ())
+  rslt <- join (env emptyResult )
+  traceShow ("cache result after is: " ++ str ++ show rslt) (return ())
+  dataFetch (InsertUsers users)
 
+emptyResult :: Env u -> GenHaxl () ()
+emptyResult env = Haxl.unsafeLiftIO emptyCache 
+  where
+   ioCacheRef = Haxl.cacheRef env
+   emptyCache = IORef.writeIORef ioCacheRef Haxl.empty
 -- Data source implementation.
 
 data SQLiteDBRequest a where

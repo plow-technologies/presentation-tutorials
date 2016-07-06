@@ -34,8 +34,7 @@ User
 
 
 instance Hashable User
-instance HasResolution e => Hashable (Fixed e) where
-  hashWithSalt s = (hashWithSalt s :: Double -> Int) . realToFrac
+
 deriving instance Generic Day
 instance Hashable Day
 deriving instance Generic TimeOfDay
