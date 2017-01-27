@@ -31,7 +31,7 @@ import           Database.Persist.Sql
 import           Haxl.Core hiding (try)
 import qualified Haxl.Core.Monad as Haxl
 import qualified Haxl.Core.DataCache as Haxl
-import           Haxl.Core.RequestStore 
+import           Haxl.Core.RequestStore
 import qualified Data.IORef as IORef
 import           Models
 import Debug.Trace (traceShow)
@@ -55,14 +55,17 @@ getUsernameById userId = dataFetch (GetUserById userId)
 
 insertUsers :: [User] -> GenHaxl () ()
 insertUsers users = do
+  {- uncomment if you want to see the cache printed
   str <- Haxl.dumpCacheAsHaskell
   traceShow ("cache result is: " ++ str) (return ())
-  rslt <- join (env emptyResult )
+  rslt <- join (env emptyResult)
   traceShow ("cache result after is: " ++ str ++ show rslt) (return ())
+  -}
+  _ <- join (env emptyResult)
   dataFetch (InsertUsers users)
 
 emptyResult :: Env u -> GenHaxl () ()
-emptyResult env = Haxl.unsafeLiftIO emptyCache 
+emptyResult env = Haxl.unsafeLiftIO emptyCache
   where
    ioCacheRef = Haxl.cacheRef env
    emptyCache = IORef.writeIORef ioCacheRef Haxl.empty

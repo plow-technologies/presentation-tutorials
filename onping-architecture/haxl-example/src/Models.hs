@@ -32,6 +32,10 @@ User
   deriving Eq Read Show Generic
 |]
 
+{- produced by the QuasiQuoter
+Types: User, Key User, UserId, UserName, UserAge,UniqueName, Entity UserId User
+Functions: migrateAll, userName, userAge
+-}
 
 instance Hashable User
 
