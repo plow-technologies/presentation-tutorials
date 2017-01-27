@@ -1,0 +1,24 @@
+resolver: lts-7.17
+
+packages:
+- '.'
+- location:
+    git: git@github.com:lykahb/groundhog
+    commit: 022b7554dcb7a53f24cbf79e8f283e67ec376642
+  extra-dep: true
+  subdirs:
+  - groundhog
+  - groundhog-th
+  - groundhog-sqlite
+
+- '../shared-types'
+
+
+
+extra-deps:
+- groundhog-converters-0.1.0
+- tasty-groundhog-converters-0.1.0  
+
+flags: {}
+
+extra-package-dbs: []
